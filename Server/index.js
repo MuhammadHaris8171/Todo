@@ -1,38 +1,69 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const cors = require('cors')
-const todoModel=require('./Models/todo')
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const todoModel = require('./Models/todo');
 
-const app=express()
-app.use(cors())
-app.use(express.json())
-mongoose.connect('mongodb://localhost:27017/todo')
+const app = express();
+const PORT = 3001;
 
-app.get('/get',(req,res)=>{
-    todoModel.find()
-    .then(result=>res.json(result))
-    .catch(err=>res.json(err))
-})
-app.post('/add',(req,res)=>{
-    const task=req.body.task
-    todoModel.create({
-        task:task
-    }).then(result=>res.json(result))
-    .catch(err=>res.json(err))
+// ✅ 1. Enable CORS for Vercel Frontend
+app.use(cors({
+  origin: 'https://todo-m1kx.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
 
+app.use(express.json());
+
+// ✅ 2. MongoDB Atlas Connection
+mongoose.connect('mongodb+srv://yassuopro316:<db_password>@cluster0.0ptbm.mongodb.net/todo?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
-app.delete('/delete/:id',(req,res)=>{
-    const {id}=req.params
-    todoModel.findByIdAndDelete({_id:id})
-    .then(result=>res.json(result))
-    .catch(err=>res.json(err))
-})
-app.put('/update/:id',(req,res)=>{
-    const {id}=req.params
-    todoModel.findByIdAndUpdate({_id:id},{done:true})
-    .then(result=>res.json(result))
-    .catch(err=>res.json(err))
-})
-app.listen(3001,()=>{
-    console.log("server is running")
-})
+  .then(() => console.log('✅ MongoDB Atlas connected'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
+
+// ✅ 3. API Routes
+app.get('/get', async (req, res) => {
+  try {
+    const todos = await todoModel.find();
+    res.json(todos);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch todos' });
+  }
+});
+
+app.post('/add', async (req, res) => {
+  try {
+    const { task } = req.body;
+    const newTodo = await todoModel.create({ task });
+    res.json(newTodo);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create todo' });
+  }
+});
+
+app.delete('/delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedTodo = await todoModel.findByIdAndDelete(id);
+    res.json(deletedTodo);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete todo' });
+  }
+});
+
+app.put('/update/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedTodo = await todoModel.findByIdAndUpdate(id, { done: true }, { new: true });
+    res.json(updatedTodo);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update todo' });
+  }
+});
+
+// ✅ 4. Listener
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
