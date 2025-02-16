@@ -8,7 +8,7 @@ const PORT = 3001;
 
 // ✅ 1. Enable CORS for Vercel Frontend
 app.use(cors({
-  origin: 'https://todo-m1kx.vercel.app',
+  origin: 'https://todo-two-ochre.vercel.app/',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
