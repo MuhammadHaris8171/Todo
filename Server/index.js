@@ -8,15 +8,15 @@ const PORT = 3001;
 
 // ✅ 1. Enable CORS for Vercel Frontend
 app.use(cors({
-  origin: 'https://todo-two-ochre.vercel.app/',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-}));
-
+    origin: 'https://todo-two-ochre.vercel.app', // Frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  }));
+  
 app.use(express.json());
 
 // ✅ 2. MongoDB Atlas Connection
-mongoose.connect('mongodb+srv://yassuopro316:<db_password>@cluster0.0ptbm.mongodb.net/todo?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://yassuopro316:h0j2qiwJw2girsew@cluster0.0ptbm.mongodb.net/todo?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

@@ -3,7 +3,8 @@ import Create from './Create';
 import axios from 'axios';
 import { BsCircleFill, BsFillCheckCircleFill, BsFillTrashFill } from 'react-icons/bs';
 
-const API_URL = 'https://todo-m1kx.vercel.app';
+const API_URL = 'https://todo-m1kx.vercel.app'; // Backend URL
+
 
 function Home() {
   const [todos, setTodos] = useState([]);
